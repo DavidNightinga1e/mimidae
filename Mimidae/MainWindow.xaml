@@ -14,25 +14,22 @@
         </Grid.RowDefinitions>
         <StackPanel FlowDirection="LeftToRight" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0"
                     Orientation="Horizontal" Background="#009080">
-            <Button Name="AddButton">
+            <Button Name="AddButton" Click="AddButton_OnClick">
                 <Image Source="Graphics/plus.png" Height="35" Opacity="0.8" />
             </Button>
-            <Button Name="StartButton">
+            <Button Name="StartButton" Click="StartButton_OnClick">
                 <Image Source="Graphics/play-button.png" Height="35" Opacity="0.8" />
             </Button>
-            <Button Name="PauseButton">
+            <Button Name="PauseButton" Click="PauseButton_OnClick">
                 <Image Source="Graphics/pause.png" Height="35" Opacity="0.8" />
             </Button>
-            <Button Name="StopButton">
+            <Button Name="StopButton" Click="StopButton_OnClick">
                 <Image Source="Graphics/stop.png" Height="35" Opacity="0.8" />
             </Button>
-            <Button Name="DeleteButton">
+            <Button Name="DeleteButton" Click="DeleteButton_OnClick">
                 <Image Source="Graphics/close.png" Height="40" Opacity="0.8" />
             </Button>
         </StackPanel>
-        <ListBox Grid.Row="1" Padding="-2" Background="#007060" SelectionMode="Single">
-            <ListBoxItem>Torrent File 2</ListBoxItem>
-            <ListBoxItem>Torrent File 2</ListBoxItem>
-        </ListBox>
+        <ListBox Grid.Row="1" Padding="-2" Background="#007060" SelectionMode="Single" Name="TorrentsListBox" />
     </Grid>
 </Window>
