@@ -1,42 +1,84 @@
 ﻿using System;
+using System.Timers;
 using System.Windows;
+using Microsoft.Win32;
+using Mimidae.Models;
 
 namespace Mimidae
 {
     public partial class MainWindow
     {
+        private readonly Client _client;
+
         public MainWindow()
         {
             InitializeComponent();
+            _client = new Client();
+            _client.Start();
+
+            var timer = new Timer(1000);
+            timer.Elapsed += OnTimerElapsed;
+            timer.Start();
+
+            TorrentsListBox.ItemsSource = _client.TorrentModelsBindingList;
+
+            Closed += OnClosed;
         }
 
-        private void AddButton_OnClick(object sender, RoutedEventArgs e)
+        private async void OnClosed(object sender, EventArgs e)
         {
-            TorrentsListBox.Items.Add(DateTime.Now.Ticks);
+            await _client.Stop();
         }
 
-        private void StartButton_OnClick(object sender, RoutedEventArgs e)
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _client.UpdateProgress();
         }
 
-        private void PauseButton_OnClick(object sender, RoutedEventArgs e)
+        private async void AddButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            var dialog = new OpenFileDialog
+            {
+                Multiselect = false,
+                CheckFileExists = true,
+                Title = "Open Torrent File",
+                DefaultExt = "torrent"
+            };
+            var showDialog = dialog.ShowDialog(this);
+            if (showDialog is true)
+            {
+                await _client.AddFile(dialog.FileName);
+            }
         }
 
-        private void StopButton_OnClick(object sender, RoutedEventArgs e)
+        private async void StartButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            var selectedItems = TorrentsListBox.SelectedItems;
+            if (selectedItems.Count is 1)
+                await _client.StartTorrent((TorrentModel) selectedItems[0]);
         }
 
-        private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
+        private async void PauseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var selectedItems = TorrentsListBox.SelectedItems;
+            if (selectedItems.Count is 1)
+                await _client.PauseTorrent((TorrentModel) selectedItems[0]);
+        }
+
+        private async void StopButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var selectedItems = TorrentsListBox.SelectedItems;
+            if (selectedItems.Count is 1)
+                await _client.StopTorrent((TorrentModel) selectedItems[0]);
+        }
+
+        private async void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
             var selectedItems = TorrentsListBox.SelectedItems;
             if (selectedItems.Count is 1)
             {
-                var item = selectedItems[0];
-                TorrentsListBox.Items.Remove(item);
+                var item = (TorrentModel) selectedItems[0];
+                await _client.Delete(item);
             }
         }
     }

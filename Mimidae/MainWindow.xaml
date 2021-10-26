@@ -30,6 +30,15 @@
                 <Image Source="Graphics/close.png" Height="40" Opacity="0.8" />
             </Button>
         </StackPanel>
-        <ListBox Grid.Row="1" Padding="-2" Background="#007060" SelectionMode="Single" Name="TorrentsListBox" />
+        <ListBox Grid.Row="1" Padding="-2" Background="#007060" SelectionMode="Single" Name="TorrentsListBox">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding FullDescription}" />
+                        <ProgressBar Value="{Binding Progress}" Height="10" Padding="10" Foreground="Aqua" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
